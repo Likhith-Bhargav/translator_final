@@ -14,24 +14,23 @@ import torch
 logger = logging.getLogger(__name__)
 
 class M2M100Direct:
-    """Direct implementation of Facebook M2M100 418M translation functionality using local models only"""
+    """Direct implementation of Facebook mBART translation functionality using local models only"""
 
     def __init__(self, model_path: Optional[str] = None):
         """
-        Initialize M2M100 translator
-
+        Initialize mBART translator
         Args:
-            model_path: Path to the M2M100 model directory. If None, uses default path.
+            model_path: Path to the mBART model directory. If None, uses default path.
         """
         if model_path is None:
             # Default path - user will update this
-            model_path = "/path/to/m2m100_418M_model"
-
-        self.model_path = Path(model_path)
+            self.model_path = Path("/Users/likhithbhargav/Desktop/PDFMathTranslate-main 4/models/mbart-large-50-many-to-many-mmt")
+        else:
+            self.model_path = Path(model_path)
 
         if not self.model_path.exists():
             raise FileNotFoundError(
-                f"M2M100 model not found at {self.model_path}. "
+                f"mBART model not found at {self.model_path}. "
                 "Please ensure the model is downloaded and update the model path."
             )
 
@@ -42,23 +41,23 @@ class M2M100Direct:
         self._load_model()
 
     def _load_model(self):
-        """Load the M2M100 model and tokenizer from local files"""
+        """Load the mBART model and tokenizer from local files"""
         try:
-            from transformers import M2M100ForConditionalGeneration, M2M100Tokenizer
+            from transformers import MBartForConditionalGeneration, MBart50Tokenizer
 
             # Load tokenizer
-            self._tokenizer = M2M100Tokenizer.from_pretrained(
+            self._tokenizer = MBart50Tokenizer.from_pretrained(
                 self.model_path,
                 local_files_only=True
             )
 
             # Load model
-            self._model = M2M100ForConditionalGeneration.from_pretrained(
+            self._model = MBartForConditionalGeneration.from_pretrained(
                 self.model_path,
                 local_files_only=True
             )
 
-            logger.info(f"M2M100 model loaded successfully from {self.model_path}")
+            logger.info(f"mBART model loaded successfully from {self.model_path}")
 
         except ImportError as e:
             logger.error(
@@ -67,51 +66,37 @@ class M2M100Direct:
             )
             raise
         except Exception as e:
-            logger.error(f"Failed to load M2M100 model from {self.model_path}: {e}")
+            logger.error(f"Failed to load mBART model from {self.model_path}: {e}")
             raise
 
     def get_supported_languages(self) -> Dict[str, str]:
-        """Get supported languages for M2M100"""
-        # M2M100 418M supports many languages
-        # These are the language codes that M2M100 expects
+        """Get supported languages for mBART"""
+        # mBART-50 supports 50 languages
+        # These are the language codes that mBART expects
         return {
-            "af": "Afrikaans", "am": "Amharic", "ar": "Arabic", "ast": "Asturian",
-            "az": "Azerbaijani", "ba": "Bashkir", "be": "Belarusian", "bg": "Bulgarian",
-            "bn": "Bengali", "br": "Breton", "bs": "Bosnian", "ca": "Catalan",
-            "ceb": "Cebuano", "cs": "Czech", "cy": "Welsh", "da": "Danish",
-            "de": "German", "el": "Greek", "en": "English", "es": "Spanish",
-            "et": "Estonian", "fa": "Persian", "ff": "Fulah", "fi": "Finnish",
-            "fr": "French", "fy": "Western Frisian", "ga": "Irish", "gd": "Scottish Gaelic",
-            "gl": "Galician", "gu": "Gujarati", "ha": "Hausa", "he": "Hebrew",
-            "hi": "Hindi", "hr": "Croatian", "ht": "Haitian", "hu": "Hungarian",
-            "hy": "Armenian", "id": "Indonesian", "ig": "Igbo", "ilo": "Iloko",
-            "is": "Icelandic", "it": "Italian", "ja": "Japanese", "jv": "Javanese",
-            "ka": "Georgian", "kk": "Kazakh", "km": "Central Khmer", "kn": "Kannada",
-            "ko": "Korean", "ku": "Kurdish", "ky": "Kirghiz", "la": "Latin",
-            "lb": "Luxembourgish", "lg": "Ganda", "ln": "Lingala", "lo": "Lao",
-            "lt": "Lithuanian", "lv": "Latvian", "mg": "Malagasy", "mk": "Macedonian",
-            "ml": "Malayalam", "mn": "Mongolian", "mr": "Marathi", "ms": "Malay",
-            "mt": "Maltese", "my": "Burmese", "ne": "Nepali", "nl": "Dutch",
-            "no": "Norwegian", "ns": "Northern Sotho", "oc": "Occitan", "or": "Oriya",
-            "pa": "Panjabi", "pl": "Polish", "ps": "Pushto", "pt": "Portuguese",
-            "ro": "Romanian", "ru": "Russian", "sd": "Sindhi", "si": "Sinhala",
-            "sk": "Slovak", "sl": "Slovenian", "so": "Somali", "sq": "Albanian",
-            "sr": "Serbian", "ss": "Swati", "su": "Sundanese", "sv": "Swedish",
-            "sw": "Swahili", "ta": "Tamil", "te": "Telugu", "th": "Thai",
-            "tl": "Tagalog", "tn": "Tswana", "tr": "Turkish", "ug": "Uighur",
-            "uk": "Ukrainian", "ur": "Urdu", "uz": "Uzbek", "vi": "Vietnamese",
-            "wo": "Wolof", "xh": "Xhosa", "yi": "Yiddish", "yo": "Yoruba",
-            "zh": "Chinese", "zu": "Zulu"
+            "ar": "Arabic", "cs": "Czech", "de": "German", "en": "English",
+            "es": "Spanish", "et": "Estonian", "fi": "Finnish", "fr": "French",
+            "gu": "Gujarati", "hi": "Hindi", "it": "Italian", "ja": "Japanese",
+            "kk": "Kazakh", "ko": "Korean", "lt": "Lithuanian", "lv": "Latvian",
+            "my": "Burmese", "ne": "Nepali", "nl": "Dutch", "ro": "Romanian",
+            "ru": "Russian", "si": "Sinhala", "tr": "Turkish", "vi": "Vietnamese",
+            "zh": "Chinese", "af": "Afrikaans", "az": "Azerbaijani", "bn": "Bengali",
+            "fa": "Persian", "he": "Hebrew", "hr": "Croatian", "id": "Indonesian",
+            "ka": "Georgian", "km": "Khmer", "mk": "Macedonian", "ml": "Malayalam",
+            "mn": "Mongolian", "mr": "Marathi", "pl": "Polish", "ps": "Pashto",
+            "pt": "Portuguese", "sv": "Swedish", "sw": "Swahili", "ta": "Tamil",
+            "te": "Telugu", "th": "Thai", "tl": "Tagalog", "uk": "Ukrainian",
+            "ur": "Urdu", "xh": "Xhosa", "gl": "Galician", "sl": "Slovenian"
         }
 
     def is_language_supported(self, lang_code: str) -> bool:
-        """Check if a language is supported by M2M100"""
+        """Check if a language is supported by mBART"""
         supported = self.get_supported_languages()
         return lang_code.lower() in supported
 
     def translate_text(self, text: str, source_lang: str, target_lang: str) -> str:
         """
-        Translate text using M2M100 model
+        Translate text using mBART model
 
         Args:
             text: Text to translate
@@ -122,18 +107,36 @@ class M2M100Direct:
             Translated text
         """
         if self._model is None or self._tokenizer is None:
-            raise RuntimeError("M2M100 model not properly loaded")
+            raise RuntimeError("mBART model not properly loaded")
 
         # Check if languages are supported
         supported_langs = self.get_supported_languages()
         if source_lang.lower() not in supported_langs:
-            raise ValueError(f"Source language '{source_lang}' not supported by M2M100")
+            raise ValueError(f"Source language '{source_lang}' not supported by mBART")
         if target_lang.lower() not in supported_langs:
-            raise ValueError(f"Target language '{target_lang}' not supported by M2M100")
+            raise ValueError(f"Target language '{target_lang}' not supported by mBART")
 
         try:
-            # Set source language
-            self._tokenizer.src_lang = source_lang.lower()
+            # mBART language code mapping (simplified to mBART format)
+            mbart_lang_map = {
+                "en": "en_XX", "zh": "zh_CN", "fr": "fr_XX", "de": "de_DE",
+                "es": "es_XX", "it": "it_IT", "pt": "pt_XX", "ru": "ru_RU",
+                "ja": "ja_XX", "ko": "ko_KR", "ar": "ar_AR", "hi": "hi_IN",
+                "nl": "nl_XX", "sv": "sv_SE", "da": "da_DK", "no": "nb_NO",
+                "fi": "fi_FI", "et": "et_EE", "lv": "lv_LV", "lt": "lt_LT",
+                "pl": "pl_PL", "cs": "cs_CZ", "sk": "sk_SK", "sl": "sl_SI",
+                "hr": "hr_HR", "bs": "bs_BA", "sr": "sr_RS", "mk": "mk_MK",
+                "bg": "bg_BG", "uk": "uk_UA", "ro": "ro_RO", "hu": "hu_HU",
+                "tr": "tr_TR", "el": "el_GR", "he": "he_IL", "fa": "fa_IR",
+                "vi": "vi_VN", "th": "th_TH", "id": "id_ID", "ms": "ms_MY",
+                "tl": "tl_XX", "sw": "sw_KE", "af": "af_ZA", "xh": "xh_ZA"
+            }
+
+            source_lang_code = mbart_lang_map.get(source_lang.lower(), source_lang.lower())
+            target_lang_code = mbart_lang_map.get(target_lang.lower(), target_lang.lower())
+
+            # Set source language for tokenizer
+            self._tokenizer.src_lang = source_lang_code
 
             # Tokenize input
             inputs = self._tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
@@ -142,7 +145,7 @@ class M2M100Direct:
             with torch.no_grad():
                 generated_tokens = self._model.generate(
                     **inputs,
-                    forced_bos_token_id=self._tokenizer.get_lang_id(target_lang.lower()),
+                    forced_bos_token_id=self._tokenizer.lang_code_to_id[target_lang_code],
                     max_length=512,
                     num_beams=4,
                     length_penalty=1.0,
@@ -160,7 +163,7 @@ class M2M100Direct:
 
     def translate_batch(self, texts: list[str], source_lang: str, target_lang: str) -> list[str]:
         """
-        Translate multiple texts in batch
+        Translate multiple texts in batch using mBART model
 
         Args:
             texts: List of texts to translate
@@ -171,18 +174,36 @@ class M2M100Direct:
             List of translated texts
         """
         if self._model is None or self._tokenizer is None:
-            raise RuntimeError("M2M100 model not properly loaded")
+            raise RuntimeError("mBART model not properly loaded")
 
         # Check if languages are supported
         supported_langs = self.get_supported_languages()
         if source_lang.lower() not in supported_langs:
-            raise ValueError(f"Source language '{source_lang}' not supported by M2M100")
+            raise ValueError(f"Source language '{source_lang}' not supported by mBART")
         if target_lang.lower() not in supported_langs:
-            raise ValueError(f"Target language '{target_lang}' not supported by M2M100")
+            raise ValueError(f"Target language '{target_lang}' not supported by mBART")
 
         try:
-            # Set source language
-            self._tokenizer.src_lang = source_lang.lower()
+            # mBART language code mapping (simplified to mBART format)
+            mbart_lang_map = {
+                "en": "en_XX", "zh": "zh_CN", "fr": "fr_XX", "de": "de_DE",
+                "es": "es_XX", "it": "it_IT", "pt": "pt_XX", "ru": "ru_RU",
+                "ja": "ja_XX", "ko": "ko_KR", "ar": "ar_AR", "hi": "hi_IN",
+                "nl": "nl_XX", "sv": "sv_SE", "da": "da_DK", "no": "nb_NO",
+                "fi": "fi_FI", "et": "et_EE", "lv": "lv_LV", "lt": "lt_LT",
+                "pl": "pl_PL", "cs": "cs_CZ", "sk": "sk_SK", "sl": "sl_SI",
+                "hr": "hr_HR", "bs": "bs_BA", "sr": "sr_RS", "mk": "mk_MK",
+                "bg": "bg_BG", "uk": "uk_UA", "ro": "ro_RO", "hu": "hu_HU",
+                "tr": "tr_TR", "el": "el_GR", "he": "he_IL", "fa": "fa_IR",
+                "vi": "vi_VN", "th": "th_TH", "id": "id_ID", "ms": "ms_MY",
+                "tl": "tl_XX", "sw": "sw_KE", "af": "af_ZA", "xh": "xh_ZA"
+            }
+
+            source_lang_code = mbart_lang_map.get(source_lang.lower(), source_lang.lower())
+            target_lang_code = mbart_lang_map.get(target_lang.lower(), target_lang.lower())
+
+            # Set source language for tokenizer
+            self._tokenizer.src_lang = source_lang_code
 
             # Tokenize inputs
             inputs = self._tokenizer(
@@ -197,7 +218,7 @@ class M2M100Direct:
             with torch.no_grad():
                 generated_tokens = self._model.generate(
                     **inputs,
-                    forced_bos_token_id=self._tokenizer.get_lang_id(target_lang.lower()),
+                    forced_bos_token_id=self._tokenizer.lang_code_to_id[target_lang_code],
                     max_length=512,
                     num_beams=4,
                     length_penalty=1.0,
