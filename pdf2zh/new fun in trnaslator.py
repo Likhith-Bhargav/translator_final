@@ -17,7 +17,7 @@ class M2M100Translator(BaseTranslator):
             self.m2m100_direct = get_m2m100_direct()
         except ImportError:
             logger.warning(
-                "m2m100_direct module not available, if you want to use M2M100 translator, please ensure transformers and torch are installed. If you don't use M2M100 translator, you can safely ignore this warning."
+                "m2m100_direct module not available, if you want to use mBART translator, please ensure transformers and torch are installed. If you don't use mBART translator, you can safely ignore this warning."
             )
             raise
 
@@ -33,14 +33,14 @@ class M2M100Translator(BaseTranslator):
         except ValueError as e:
             if "not supported by M2M100" in str(e):
                 logger.error(
-                    f"Language pair {self.lang_in}->{self.lang_out} not supported by M2M100. "
+                    f"Language pair {self.lang_in}->{self.lang_out} not supported by mBART. "
                     f"Supported languages: {list(self.m2m100_direct.get_supported_languages().keys()) if hasattr(self, 'm2m100_direct') else 'N/A'}"
                 )
                 # Return original text as fallback
                 return text
             elif "model not found" in str(e):
                 logger.error(
-                    "M2M100 model not found locally. "
+                    "mBART model not found locally. "
                     "Please ensure the model is downloaded to the correct path and update the model path in m2m100_direct.py"
                 )
                 # Return original text as fallback
