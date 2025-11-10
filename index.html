@@ -1,62 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDF Document Translator</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Document Translator</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <div class="container">
-    <h1>PDF Document Translator</h1>
-    <p>Translate your PDF documents using NLLB-200 — preserving layout and formatting.</p>
+    <div class="container">
+        <h1>PDF Document Translator</h1>
+        <p>Translate your PDF documents using NLLB-200 — preserving layout and formatting.</p>
 
-    <form id="translateForm">
-      <div class="form-group">
-        <label for="file">Upload PDF:</label>
-        <input type="file" id="file" name="file" accept=".pdf" required />
-      </div>
+        <form id="translateForm">
+            <div class="form-group">
+                <label for="file">Upload PDF:</label>
+                <input type="file" id="file" name="file" accept=".pdf" required />
+            </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label for="lang_in">Source Language:</label>
-          <select id="lang_in" name="lang_in">
-            <option value="en">English</option>
-            <option value="fr">French</option>
-            <option value="hi">Hindi</option>
-            <option value="zh">Chinese</option>
-            <option value="es">Spanish</option>
-            <option value="de">German</option>
-          </select>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lang_in">Source Language:</label>
+                    <select id="lang_in" name="lang_in">
+                        <option value="en">English</option>
+                        <option value="fr">French</option>
+                        <option value="hi">Hindi</option>
+                        <option value="zh">Chinese</option>
+                        <option value="es">Spanish</option>
+                        <option value="de">German</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="lang_out">Target Language:</label>
+                    <select id="lang_out" name="lang_out">
+                        <option value="zh">Chinese</option>
+                        <option value="en">English</option>
+                        <option value="fr">French</option>
+                        <option value="hi">Hindi</option>
+                        <option value="es">Spanish</option>
+                        <option value="de">German</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" id="translateBtn">Translate</button>
+        </form>
+
+        <div id="loading" class="hidden">⏳ Translating... Please wait...</div>
+
+        <div id="result" class="result hidden">
+            <h3>Translation Results</h3>
+            <a id="monoLink" href="#" target="_blank">Download Mono PDF</a>
+            <a id="dualLink" href="#" target="_blank">Download Dual PDF</a>
         </div>
 
-        <div class="form-group">
-          <label for="lang_out">Target Language:</label>
-          <select id="lang_out" name="lang_out">
-            <option value="zh">Chinese</option>
-            <option value="en">English</option>
-            <option value="fr">French</option>
-            <option value="hi">Hindi</option>
-            <option value="es">Spanish</option>
-            <option value="de">German</option>
-          </select>
-        </div>
-      </div>
-
-      <button type="submit" id="translateBtn">Translate</button>
-    </form>
-
-    <div id="loading" class="hidden">⏳ Translating... Please wait...</div>
-
-    <div id="result" class="result hidden">
-      <h3>Translation Results</h3>
-      <a id="monoLink" href="#" target="_blank">Download Mono PDF</a>
-      <a id="dualLink" href="#" target="_blank">Download Dual PDF</a>
+        <div id="errorBox" class="error hidden"></div>
     </div>
 
-    <div id="errorBox" class="error hidden"></div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
